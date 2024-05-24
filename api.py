@@ -2,6 +2,7 @@ from flask import Blueprint, request, session, jsonify
 from flask import current_app as app
 
 import re
+import random
 
 from models import db, User, Flight
 from utils import find_optimal_path
@@ -131,8 +132,33 @@ def find_best_route():
     flight_source, flight_destination, excluded_airport, included_airport=data.get('source',""), data.get('destination',""),data.get(' excluded_airport',""), data.get('included_airport',"")
     if not flight_source or not flight_destination:
         return {"message": "Invalid flight plan."}, 404
-    try:
-        result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
-        return jsonify(result)
-    except:
-        return {"message": "Invalid data."}, 404
+      
+    result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
+    return jsonify(result)
+
+
+@api.route("/flight-plan/<int:plan_id>/status", methods=["POST"])
+def flight_plan_alert(plan_id):
+
+    plan = db.session.query(Flight).get(plan_id)
+
+    if plan is None:
+        return {"message": "Flight plan not found."}, 404
+    
+    if plan.user_id != session.get("user-id"):
+        return {"message": "Not authorised"}, 401
+
+    source = request.json.get("source")
+    destination = request.json.get("destination")
+    excluded = request.json.get("excluded-airport", "")
+    included = request.json.get("included-airport")
+
+    if random.randint(1, 3) == 1:
+        route = random.choice(find_optimal_path(source, destination, excluded, included))
+
+        return {"alert": "There is a storm in the path", 
+                "route": route,
+        }
+
+    return {"message": "everything is fine"}
+
