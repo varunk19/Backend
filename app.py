@@ -1,7 +1,4 @@
-import os
-
-from flask import Flask
-
+from flask import Flask,jsonify,request
 
 
 def create_app():
@@ -9,8 +6,8 @@ def create_app():
     from api import api
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI", "sqlite:///project.sqlite")
-    app.config["PASS-SALT"] = os.environ.get("PASS_SALT", "ieidnvsiaonafison").encode()
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.sqlite"
+    app.config["SECRET_KEY"] = "sifeonseurbgld"
 
     db.init_app(app)
 
@@ -18,7 +15,7 @@ def create_app():
         db.create_all()
 
     app.register_blueprint(api)
-
+    
     return app
 
 
