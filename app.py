@@ -1,13 +1,26 @@
-from flask import Flask, jsonify
-app = Flask(__name__)
+from flask import Flask
 
-@app.route('/api1', methods=['GET'])
-def api1():
-    return jsonify({"message": "Response from API 1"})
 
-@app.route('/api2', methods=['GET'])
-def api2():
-    return jsonify({"message": "Response from API 2"})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+def create_app():
+    from models import db
+    from api import api
+
+    app = Flask(__name__)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.sqlite"
+
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
+    app.register_blueprint(api)
+    
+    return app
+
+
+app = create_app()
+
+
+if __name__ == "__main__":
+    app.run()
