@@ -4,7 +4,6 @@ import networkx as nx
 from math import radians, cos, sin, asin, sqrt
 
 df = pd.read_csv("data_and_path/myDB.csv")
-print(df.shape)
 
 # s = source, d = destination
 
@@ -101,6 +100,12 @@ def find_optimal_path(
         # Sort routes by total time
         sorted_routes = sorted(all_routes, key=calculate_route_time)
 
+        airports = {}
+
+        for index, row in df.iterrows():
+            airports[row["s_airport"]] = [row["s_latitude"], row["s_longitude"]]
+            airports[row["d_airport"]] = [row["d_latitude"], row["d_longitude"]]
+
         # Prepare results
         results = []
         for i, route in enumerate(sorted_routes, start=1):
@@ -109,7 +114,7 @@ def find_optimal_path(
             total_stopovers = len(route) - 2
             results.append(
                 {
-                    "Route": route,
+                    "Route": [airports[each] for each in route],
                     "Total Distance (km)": total_distance,
                     "Total Stopovers": total_stopovers,
                     "Total Time (hours)": round(total_time, 2),
