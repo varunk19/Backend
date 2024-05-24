@@ -1,5 +1,6 @@
 from flask import Blueprint, request, session, jsonify
 from flask import current_app as app
+from flask_cors import cross_origin
 
 import re
 import random
@@ -25,7 +26,7 @@ def check(data):
 
     alph = re.findall(r"[a-zA-Z]+", Id)
     numb = re.findall(r"[0-9]+", Id)
-    pas = re.findall(r"[0-9]+", Password)
+    pas = re.findall(r"[0-9a-zA-Z]+", Password)
 
     alphabets = ""
     numbers = ""
@@ -53,7 +54,7 @@ def check(data):
     return 1
 
 
-@api.route("/login", methods=["POST"])
+@api.route('/login', methods=['POST'])
 def Login():
     data = request.get_json()
 
@@ -113,13 +114,13 @@ def edit_flight_plan(plan_id):
 
 @api.route("/fetch_flight-plan", methods=["POST"])
 def fetch_flight_plan():
-    data = request.get_json()
-
-    flight_id = data.get("flight_id", "")
-    flight_plan = Flight.query.filter_by(id=flight_id).first()
+    data=request.get_json()
+    
+    user_id = data.get('user_id',"")
+    flight_plan = Flight.query.filter_by(user_id=user_id).first()
 
     if not flight_plan:
-        return {"message": "There is no flight plan with this id."}, 404
+        return {"message": "There is no flight plan with this id."}, 200
     else:
         return jsonify(flight_plan)
 
@@ -130,7 +131,7 @@ def find_best_route():
     flight_source, flight_destination, excluded_airport, included_airport = (
         data.get("source", ""),
         data.get("destination", ""),
-        data.get(" excluded_airport", ""),
+        data.get("excluded_airport", ""),
         data.get("included_airport", ""),
     )
     if not flight_source or not flight_destination:

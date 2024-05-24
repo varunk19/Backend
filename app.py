@@ -1,8 +1,7 @@
 from flask import Flask, jsonify, request
-
-
+from flask_cors import CORS
 def create_app():
-    from models import db
+    from models import db, User
     from api import api
 
     app = Flask(__name__)
@@ -10,9 +9,14 @@ def create_app():
     app.config["SECRET_KEY"] = "sifeonseurbgld"
 
     db.init_app(app)
+    CORS(app)
 
     with app.app_context():
         db.create_all()
+        if User.query.filter_by(userid="IA1001").first() is None:
+            user = User(userid="IA1001", password="IA0011")
+            db.session.add(user)
+            db.session.commit()
 
     app.register_blueprint(api)
 
