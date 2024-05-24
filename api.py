@@ -8,14 +8,12 @@ from utils import find_optimal_path
 
 api = Blueprint("api", __name__)
 
-
-Id_length=6
-Password_length=6
-Id_alphabets_length=2
-Id_numbers_length=4
-
-
 def check(data):
+    Id_length=6
+    Password_length=6
+    Id_alphabets_length=2
+    Id_numbers_length=4
+
     Id=data['Id']
     Password=data['Password']
     if len(Id)!=Id_length:
