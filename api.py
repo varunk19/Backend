@@ -4,6 +4,7 @@ from flask import current_app as app
 import re
 
 from models import db, User, Flight
+from utils import find_optimal_path
 
 api = Blueprint("api", __name__)
 
@@ -114,3 +115,7 @@ def edit_flight_plan(plan_id):
 
     return {"message": "Request sucessfull"}
 
+
+@api.route("/flight-plan/<int:plan_id>")
+def flight_plan_alert(plan_id):
+    return find_optimal_path('AER', 'KZN', "", "")
