@@ -29,7 +29,7 @@ To deploy this project run
 #### login
 
 ```http
-  POST/api/login
+  /login
 ```
 
 | Parameter | Type     | Description                |
@@ -39,7 +39,7 @@ To deploy this project run
 #### Create flight_plan
 
 ```http
-  POST/api/flight_plan
+  /flight_plan
 ```
 
 | Parameter | Type     | Description                       |
@@ -50,7 +50,7 @@ To deploy this project run
 #### Edit_flight_plan
 
 ```http
-  POST/api/edit_flight_plan
+  /edit_flight_plan
 ```
 
 | Parameter | Type     | Description                       |
@@ -61,7 +61,7 @@ To deploy this project run
 #### Fetch_flight_plan
 
 ```http
-  POST/api/fetch_flight_plan
+  /fetch_flight_plan
 ```
 
 | Parameter | Type     | Description                       |
@@ -72,7 +72,7 @@ To deploy this project run
 #### Find_best_route
 
 ```http
-  POST/api/find_best_route
+  /find_best_route
 ```
 
 | Parameter | Type     | Description                       |
@@ -83,7 +83,7 @@ To deploy this project run
 #### Flight_plan_alert
 
 ```http
-  POST/api/flight_plan/status
+  /flight_plan/status
 ```
 
 | Parameter | Type     | Description                       |
