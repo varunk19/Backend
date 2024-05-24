@@ -9,14 +9,12 @@ from utils import find_optimal_path
 
 api = Blueprint("api", __name__)
 
-
-Id_length=6
-Password_length=6
-Id_alphabets_length=2
-Id_numbers_length=4
-
-
 def check(data):
+    Id_length=6
+    Password_length=6
+    Id_alphabets_length=2
+    Id_numbers_length=4
+
     Id=data['Id']
     Password=data['Password']
     if len(Id)!=Id_length:
@@ -134,6 +132,7 @@ def find_best_route():
     flight_source, flight_destination, excluded_airport, included_airport=data.get('source',""), data.get('destination',""),data.get(' excluded_airport',""), data.get('included_airport',"")
     if not flight_source or not flight_destination:
         return {"message": "Invalid flight plan."}, 404
+      
     result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
     return jsonify(result)
 
@@ -157,9 +156,9 @@ def flight_plan_alert(plan_id):
     if random.randint(1, 3) == 1:
         route = random.choice(find_optimal_path(source, destination, excluded, included))
 
-        print(route)
         return {"alert": "There is a storm in the path", 
                 "route": route,
         }
 
     return {"message": "everything is fine"}
+
