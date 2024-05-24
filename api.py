@@ -9,70 +9,69 @@ from utils import find_optimal_path
 
 api = Blueprint("api", __name__)
 
+
 def check(data):
-    Id_length=6
-    Password_length=6
-    Id_alphabets_length=2
-    Id_numbers_length=4
+    Id_length = 6
+    Password_length = 6
+    Id_alphabets_length = 2
+    Id_numbers_length = 4
 
-    Id=data['Id']
-    Password=data['Password']
-    if len(Id)!=Id_length:
+    Id = data["Id"]
+    Password = data["Password"]
+    if len(Id) != Id_length:
         return 0
-    elif len(Password)!=Password_length:
+    elif len(Password) != Password_length:
         return 0
-    
-    alph=re.findall(r'[a-zA-Z]+',Id)
-    numb=re.findall(r'[0-9]+',Id)
-    pas=re.findall(r'[0-9]+',Password)
-    
-    alphabets=''
-    numbers=''
-    passw=''
-    
+
+    alph = re.findall(r"[a-zA-Z]+", Id)
+    numb = re.findall(r"[0-9]+", Id)
+    pas = re.findall(r"[0-9]+", Password)
+
+    alphabets = ""
+    numbers = ""
+    passw = ""
+
     for x in alph:
-        alphabets+=x
+        alphabets += x
     for x in numb:
-        numbers+=x
+        numbers += x
     for x in pas:
-        passw+=x
-    
-    
-    if len(alphabets)+len(numbers)!=Id_length:
+        passw += x
+
+    if len(alphabets) + len(numbers) != Id_length:
         return 0
-    if len(alphabets)!=Id_alphabets_length:
+    if len(alphabets) != Id_alphabets_length:
         return 0
-    if len(numbers)!=Id_numbers_length:
+    if len(numbers) != Id_numbers_length:
         return 0
-    
-    if alphabets!=Id[0:2] or numbers!=Id[2:6]:
-        return 0 
-    if len(passw)!=Password_length:
+
+    if alphabets != Id[0:2] or numbers != Id[2:6]:
         return 0
-    
+    if len(passw) != Password_length:
+        return 0
+
     return 1
-    
 
-@api.route('/login', methods=['POST'])
+
+@api.route("/login", methods=["POST"])
 def Login():
-    data=request.get_json()
+    data = request.get_json()
 
-    ID,PASSWORD=data.get('user-id', ""),data.get('password', "")
-    
-    valid=check({'Id':ID,'Password':PASSWORD})
+    ID, PASSWORD = data.get("user-id", ""), data.get("password", "")
 
+    valid = check({"Id": ID, "Password": PASSWORD})
 
     if not valid:
         return jsonify("Invalid username or password"), 404
-    
+
     valid_user = User.query.filter_by(userid=ID, password=PASSWORD).first()
-    
+
     if valid_user:
         session["user-id"] = valid_user.id
-        return jsonify('Login successful.')
+        return jsonify("Login successful.")
     else:
-        return jsonify('User not found.'), 404
-    
+        return jsonify("User not found."), 404
+
 
 @api.route("/flight-plan", methods=["POST"])
 def create_flight_plan():
@@ -81,7 +80,7 @@ def create_flight_plan():
 
     if not user_id:
         return {"message": "Not authorised"}, 401
-    
+
     if not flight_plan:
         return {"message": "Invalid input."}, 204
 
@@ -94,19 +93,18 @@ def create_flight_plan():
 
 @api.route("/flight-plan/<int:plan_id>", methods=["POST"])
 def edit_flight_plan(plan_id):
-
     plan = db.session.query(Flight).get(plan_id)
     flight_plan = request.json.get("flight-plan", None)
 
     if not plan:
         return {"message": "Flight plan not found"}, 404
-    
+
     if session.get("user-id") or plan.user_id != session.get("user-id"):
         return {"message": "Not authorised"}, 401
-    
+
     if not flight_plan:
         return {"message": "Invalid input."}, 204
-    
+
     plan.plan = flight_plan
     db.session.commit()
 
@@ -115,9 +113,9 @@ def edit_flight_plan(plan_id):
 
 @api.route("/fetch_flight-plan", methods=["POST"])
 def fetch_flight_plan():
-    data=request.get_json()
-    
-    flight_id = data.get('flight_id',"")
+    data = request.get_json()
+
+    flight_id = data.get("flight_id", "")
     flight_plan = Flight.query.filter_by(id=flight_id).first()
 
     if not flight_plan:
@@ -128,23 +126,32 @@ def fetch_flight_plan():
 
 @api.route("/find_best_route", methods=["POST"])
 def find_best_route():
-    data=request.get_json()
-    flight_source, flight_destination, excluded_airport, included_airport=data.get('source',""), data.get('destination',""),data.get(' excluded_airport',""), data.get('included_airport',"")
+    data = request.get_json()
+    flight_source, flight_destination, excluded_airport, included_airport = (
+        data.get("source", ""),
+        data.get("destination", ""),
+        data.get(" excluded_airport", ""),
+        data.get("included_airport", ""),
+    )
     if not flight_source or not flight_destination:
         return {"message": "Invalid flight plan."}, 404
-      
-    result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
+
+    result = find_optimal_path(
+        flight_destination=flight_destination,
+        flight_source=flight_source,
+        excluded_airport=excluded_airport,
+        included_airport=included_airport,
+    )
     return jsonify(result)
 
 
 @api.route("/flight-plan/<int:plan_id>/status", methods=["POST"])
 def flight_plan_alert(plan_id):
-
     plan = db.session.query(Flight).get(plan_id)
 
     if plan is None:
         return {"message": "Flight plan not found."}, 404
-    
+
     if plan.user_id != session.get("user-id"):
         return {"message": "Not authorised"}, 401
 
@@ -154,11 +161,13 @@ def flight_plan_alert(plan_id):
     included = request.json.get("included-airport")
 
     if random.randint(1, 3) == 1:
-        route = random.choice(find_optimal_path(source, destination, excluded, included))
+        route = random.choice(
+            find_optimal_path(source, destination, excluded, included)
+        )
 
-        return {"alert": "There is a storm in the path", 
-                "route": route,
+        return {
+            "alert": "There is a storm in the path",
+            "route": route,
         }
 
     return {"message": "everything is fine"}
-

@@ -6,19 +6,15 @@ from models import db, User
 @pytest.fixture()
 def app():
     app = create_app()
-    app.config.update({
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:////"
-    })
+    app.config.update({"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:////"})
 
     with app.app_context():
         db.create_all()
-        
+
         if not User.query.filter_by(userid="im1234").first():
             user = User(userid="im1234", password="123456")
             db.session.add(user)
             db.session.commit()
-
 
     yield app
 
@@ -42,8 +38,9 @@ def pilot(app):
 
 @pytest.fixture()
 def pilot_session(app, client, pilot):
-
-    response = client.post("/login", json={"user-id": pilot.userid, "password": pilot.password})
+    response = client.post(
+        "/login", json={"user-id": pilot.userid, "password": pilot.password}
+    )
     assert response.status_code == 200
 
     return True

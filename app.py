@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request
+from flask import Flask, jsonify, request
 
 
 def create_app():
@@ -15,7 +15,7 @@ def create_app():
         db.create_all()
 
     app.register_blueprint(api)
-    
+
     return app
 
 
