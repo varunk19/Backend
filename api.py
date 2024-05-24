@@ -1,10 +1,7 @@
 from flask import Blueprint, request, session, jsonify
 from flask import current_app as app
-
 import re
-
 from models import db, User, Flight
-
 api = Blueprint("api", __name__)
 
 
@@ -124,3 +121,11 @@ def fetch_flight_plan():
         return {"message": "There is no flight plan with this id."}, 404
     else:
         return jsonify(flight_plan)
+
+
+@api.route("/find_best_route", methods=["POST"])
+def find_best_route():
+    data=request.get_json()
+    flight_source, flight_destination, excluded_airport, included_airport=data.get('source',""), data.get('destination',""),data.get(' excluded_airport',""), data.get('included_airport',"")
+    result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
+    return jsonify(result)
