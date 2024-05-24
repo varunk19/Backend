@@ -26,7 +26,7 @@ To deploy this project run
 
 ## API Reference
 
-#### login
+### login
 
 ```http
   /login
