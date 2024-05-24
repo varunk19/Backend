@@ -124,13 +124,13 @@ def find_optimal_path(
 
         # Determine the optimal path
         if sorted_routes:
-            optimal_path = [{"co-ordinates": airports[each], 
-                               "code": each} for each in sorted_routes[0]]
+            optimal_path = sorted_routes[0]
             optimal_distance = calculate_route_distance(optimal_path)
             optimal_time = calculate_route_time(optimal_path)
             optimal_stopovers = len(optimal_path) - 2
             optimal_result = {
-                "Optimal Path": optimal_path,
+                "Optimal Path": [{"co-ordinates": airports[each], 
+                               "code": each} for each in sorted_routes[0]],
                 "Total Distance (km)": optimal_distance,
                 "Total Stopovers": optimal_stopovers,
                 "Total Time (hours)": round(optimal_time, 2),
