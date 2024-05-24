@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+import os
 
 
 def create_app():
@@ -6,7 +7,7 @@ def create_app():
     from api import api
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.sqlite"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
     app.config["SECRET_KEY"] = "sifeonseurbgld"
 
     db.init_app(app)
