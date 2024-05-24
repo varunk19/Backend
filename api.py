@@ -1,7 +1,11 @@
 from flask import Blueprint, request, session, jsonify
 from flask import current_app as app
+
 import re
+
 from models import db, User, Flight
+from utils import find_optimal_path
+
 api = Blueprint("api", __name__)
 
 
