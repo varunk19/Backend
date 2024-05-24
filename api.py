@@ -7,6 +7,7 @@ from models import db, User, Flight
 
 api = Blueprint("api", __name__)
 
+
 Id_length=6
 Password_length=6
 Id_alphabets_length=2
@@ -90,4 +91,26 @@ def create_flight_plan():
     db.session.add(plan)
     db.session.commit()
 
-    return {"message": "Request successful"}, 201
+    return {"plan-id": plan.id}, 201
+
+
+@api.route("/flight-plan/<int:plan_id>", methods=["POST"])
+def edit_flight_plan(plan_id):
+
+    plan = db.session.query(Flight).get(plan_id)
+    flight_plan = request.json.get("flight-plan", None)
+
+    if not plan:
+        return {"message": "Flight plan not found"}, 404
+    
+    if session.get("user-id") or plan.user_id != session.get("user-id"):
+        return {"message": "Not authorised"}, 401
+    
+    if not flight_plan:
+        return {"message": "Invalid input."}, 204
+    
+    plan.plan = flight_plan
+    db.session.commit()
+
+    return {"message": "Request sucessfull"}
+
