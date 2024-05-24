@@ -114,3 +114,15 @@ def edit_flight_plan(plan_id):
 
     return {"message": "Request sucessfull"}
 
+
+@api.route("/fetch_flight-plan", methods=["POST"])
+def fetch_flight_plan():
+    data=request.get_json()
+    
+    flight_id = data.get('flight_id',"")
+    flight_plan = Flight.query.filter_by(id=flight_id).first()
+
+    if not flight_plan:
+        return {"message": "There is no flight plan with this id."}, 404
+    else:
+        return jsonify(flight_plan)
