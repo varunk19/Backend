@@ -133,5 +133,8 @@ def find_best_route():
     flight_source, flight_destination, excluded_airport, included_airport=data.get('source',""), data.get('destination',""),data.get(' excluded_airport',""), data.get('included_airport',"")
     if not flight_source or not flight_destination:
         return {"message": "Invalid flight plan."}, 404
-    result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
-    return jsonify(result)
+    try:
+        result=find_optimal_path(flight_destination=flight_destination,flight_source=flight_source,excluded_airport=excluded_airport,included_airport=included_airport)
+        return jsonify(result)
+    except:
+        return {"message": "Invalid data."}, 404
