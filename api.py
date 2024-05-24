@@ -18,11 +18,9 @@ def check(data):
     Id=data['Id']
     Password=data['Password']
     if len(Id)!=Id_length:
-        return f'Id must be of length {Id_length}'
+        return 0
     elif len(Password)!=Password_length:
-        return f'Password must be of length {Password_length}'
-    
-    
+        return 0
     
     alph=re.findall(r'[a-zA-Z]+',Id)
     numb=re.findall(r'[0-9]+',Id)
@@ -41,18 +39,18 @@ def check(data):
     
     
     if len(alphabets)+len(numbers)!=Id_length:
-        return 'Id must consist of only letters and alphabets'
+        return 0
     if len(alphabets)!=Id_alphabets_length:
-        return f'Id must include {Id_alphabets_length} alphabets'
+        return 0
     if len(numbers)!=Id_numbers_length:
-        return f'Id must include {Id_numbers_length} alphabets'
+        return 0
     
     if alphabets!=Id[0:2] or numbers!=Id[2:6]:
-        return 'Id is not in the following pattern AI1000' 
+        return 0 
     if len(passw)!=Password_length:
-        return 'Password must consist of only numbers'
+        return 0
     
-    return 'ok'
+    return 1
     
 
 @api.route('/login', methods=['POST'])
