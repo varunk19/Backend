@@ -5,3 +5,4 @@ numpy
 pandas
 networkx
 psycopg2-binary
+Flask-CORS
