@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 
 
@@ -7,7 +9,8 @@ def create_app():
     from api import api
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.sqlite"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI", "sqlite:///project.sqlite")
+    app.config["PASS-SALT"] = os.environ.get("PASS_SALT", "ieidnvsiaonafison").encode()
 
     db.init_app(app)
 
@@ -15,7 +18,7 @@ def create_app():
         db.create_all()
 
     app.register_blueprint(api)
-    
+
     return app
 
 
