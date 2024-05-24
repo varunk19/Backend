@@ -15,7 +15,7 @@ def app():
         db.create_all()
         
         if not User.query.filter_by(userid="im1234").first():
-            user = User(userid="im1234", password="im1234")
+            user = User(userid="im1234", password="123456")
             db.session.add(user)
             db.session.commit()
 

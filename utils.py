@@ -3,7 +3,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import networkx as nx
 from math import radians, cos, sin, asin, sqrt
 
-df = pd.read_csv("flight_path/myDB.csv")
+df = pd.read_csv("data_and_path/myDB.csv")
 print (df.shape)
 
 # s = source, d = destination
