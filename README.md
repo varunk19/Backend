@@ -1,8 +1,103 @@
-# Advanced Flight Navigation System (AFNS)
-It is a navigation system to identify optimal flight paths considering factors like duration and weather and average altitude in the route. Additionally, it provides real-time risk assessment and suggests alternative routes to pilots, airlines, and airport authorities for safe and efficient navigation.<br>
-`This is the BACKEND code of the app`
-# Technologies
-## API
-Flask
-## DATABASE
-SQLAlchemy
+
+# Advanced Flight Navigation System (AFNS) BACKEND
+
+It is a navigation system to identify optimal flight paths considering factors like duration and weather and average altitude in the route. Additionally, it provides real-time risk assessment and suggests alternative routes to pilots, airlines, and airport authorities for safe and efficient navigation.
+
+`This is the BACKEND part of the app`
+## Tech Stack
+
+**Server:** Flask, pytest
+
+**Database:** SQLAlchemy
+
+**ML Libraries:** Pandas, Numpy, networkx
+
+## Deployment
+
+To deploy this project run
+
+```bash
+  pip install -r requirements.txt
+```
+```bash
+  python -m app
+```
+
+
+## API Reference
+
+#### login
+
+```http
+  POST/api/login
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user_id,password` | `string,string` | **Required**. user_id, password |
+
+#### Create flight_plan
+
+```http
+  POST/api/flight_plan
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `flight_plan`      | `json file` | **Required**. flight_plan |
+
+
+#### Edit_flight_plan
+
+```http
+  POST/api/edit_flight_plan
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `plan_id`      | `integer` | **Required**. plan_id |
+
+
+#### Fetch_flight_plan
+
+```http
+  POST/api/fetch_flight_plan
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `flight_id`      | `integer` | **Required**. flight_id |
+
+
+#### Find_best_route
+
+```http
+  POST/api/find_best_route
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `source, destination, excluded_airport, included_airport`      | `list` | **Required**. flight_data |
+
+
+#### Flight_plan_alert
+
+```http
+  POST/api/flight_plan/status
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `plan_id`      | `integer` | **Required**. plan_id |
+
+
+
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`API_KEY`
+
+`ANOTHER_API_KEY`
+
