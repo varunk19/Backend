@@ -1,3 +1,9 @@
+import sys
+
+# add your project directory to the sys.path
+project_home = '/home/varunj6v1k9/mysite'
+if project_home not in sys.path:
+    sys.path = [project_home] + sys.path
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
@@ -8,7 +14,7 @@ def create_app():
     from api import api
 
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL", "sqlite:///project.sqlite")
     app.config["SECRET_KEY"] = "sifeonseurbgld"
 
     db.init_app(app)

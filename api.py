@@ -4,6 +4,7 @@ from flask_cors import cross_origin
 
 import re
 import random
+from json import loads
 
 from models import db, User, Flight
 from utils import find_optimal_path
@@ -69,6 +70,7 @@ def Login():
 
     if valid_user:
         session["user-id"] = valid_user.id
+        session.modified = True
         return jsonify("Login successful.")
     else:
         return jsonify("User not found."), 404
@@ -76,11 +78,12 @@ def Login():
 
 @api.route("/flight-plan", methods=["POST"])
 def create_flight_plan():
-    user_id = session.get("user-id")
+    user_id = request.json.get("flight_id")
     flight_plan = request.json.get("flight-plan", None)
 
-    if not user_id:
-        return {"message": "Not authorised"}, 401
+    # print(user_id)
+    # if not user_id:
+    #     return {"message": "Not authorised"}, 401
 
     if not flight_plan:
         return {"message": "Invalid input."}, 204
@@ -122,7 +125,7 @@ def fetch_flight_plan():
     if not flight_plan:
         return {"message": "There is no flight plan with this id."}, 200
     else:
-        return jsonify(flight_plan)
+        return loads(flight_plan.plan), 200
 
 
 @api.route("/find_best_route", methods=["POST"])
@@ -153,22 +156,19 @@ def flight_plan_alert(plan_id):
     if plan is None:
         return {"message": "Flight plan not found."}, 404
 
-    if plan.user_id != session.get("user-id"):
-        return {"message": "Not authorised"}, 401
-
     source = request.json.get("source")
     destination = request.json.get("destination")
     excluded = request.json.get("excluded-airport", "")
     included = request.json.get("included-airport")
 
-    if random.randint(1, 3) == 1:
-        route = random.choice(
-            find_optimal_path(source, destination, excluded, included)
-        )
+    
+    route = random.choice(
+        find_optimal_path(source, destination, excluded, included)
+    )
 
-        return {
-            "alert": "There is a storm in the path",
-            "route": route,
-        }
+    return {
+        "alert": "There is a storm in the path",
+        "route": route,
+    }
 
-    return {"message": "everything is fine"}
+
