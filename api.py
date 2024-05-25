@@ -1,3 +1,9 @@
+import sys
+
+# add your project directory to the sys.path
+project_home = '/home/varunj6v1k9/mysite'
+if project_home not in sys.path:
+    sys.path = [project_home] + sys.path
 from flask import Blueprint, request, session, jsonify
 from flask import current_app as app
 from flask_cors import cross_origin
