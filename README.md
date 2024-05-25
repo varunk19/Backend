@@ -14,7 +14,7 @@ It is a navigation system to identify optimal flight paths considering factors l
 
 ## Algorithm
 
-To find the best route between two airports we have used Depth First Search Algorithn.
+To find the best route between two airports we have used Depth First Search Algorithm.
 
 ## Deployment
 
